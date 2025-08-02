@@ -1,104 +1,46 @@
 import json
 import time
-import datetime
-import random
-import os
+from datetime import datetime
 from plyer import notification
+import os
+import random
 
-# Function to stop notifications using a stop.txt file
-def should_stop():
-    return os.path.exists("stop.txt")
-
-# Load break times
-with open("break_schedule.json", "r") as f:
-    break_times = json.load(f)
-
-# ✅ Show initial notification
+# Show startup notification
 notification.notify(
     title="🍿 Plot Hole Plotter",
-    message="import json
-import time
-import datetime
-import random
-import os
-from plyer import notification
-
-# Function to stop notifications using a stop.txt file
-def should_stop():
-    return os.path.exists("stop.txt")
-
-# Load break times
-with open("break_schedule.json", "r") as f:
-    break_times = json.load(f)
-
-# ✅ Show initial notification
-notification.notify(
-    title="🍿 Plot Hole Plotter",
-    message="Notifier has begun! You'll get a joke at the right time.",
+    message="Notifier has started!",
     timeout=5
 )
 
-print("✅ Notifier started. Waiting for break times...")
+# Load break schedule
+with open("break_schedule.json", "r") as f:
+    schedule = json.load(f)
 
-# Random jokes list
+# Track notified times
+notified = set()
+
+# Funny jokes to show
 JOKES = [
-    "Why don’t scientists trust atoms? Because they make up everything!",
-    "What did the 0 say to the 8? Nice belt!",
-    "Movie’s slow, but your snack game is strong.",
-    "Don't worry, you’re not missing much.",
-    "Perfect time to grab popcorn or pet your dog!",
-    "This scene is like a filler episode—skip guilt-free!",
-    "Even the movie fell asleep here!",
-    "Use this moment to question your life choices... or make tea.",
-    "Back in my day, we called this a bathroom intermission!"
+    "Why don't scientists trust atoms? Because they make up everything!",
+    "Why did the scarecrow win an award? He was outstanding in his field.",
+    "I'm on a seafood diet. I see food and I eat it.",
+    "Parallel lines have so much in common… it's a shame they'll never meet.",
+    "What do you call fake spaghetti? An impasta!",
+    "Time to pause – your popcorn needs a break too!"
 ]
 
-sent_times = set()
+while True:
+    if os.path.exists("stop.txt"):
+        break
 
-while not should_stop():
-    now = datetime.datetime.now().strftime("%H:%M:%S")
-    for entry in break_times:
-        if entry["time"] == now and entry["time"] not in sent_times:
-            joke = random.choice(JOKES)
+    now = datetime.now().strftime("%H:%M:%S")
+    for b in schedule:
+        if b["time"] == now and b["time"] not in notified:
+            notified.add(b["time"])
             notification.notify(
-                title="🤣 Joke Time!",
-                message=joke,
+                title="🍿 Break Time!",
+                message=random.choice(JOKES),
                 timeout=10
             )
-            print(f"🔔 Joke sent at {now}: {joke}")
-            sent_times.add(entry["time"])
-    time.sleep(1)
-",
-    timeout=5
-)
 
-print("c")
-
-# Random jokes list
-JOKES = [
-    "Why don’t scientists trust atoms? Because they make up everything!",
-    "What did the 0 say to the 8? Nice belt!",
-    "Movie’s slow, but your snack game is strong.",
-    "Don't worry, you’re not missing much.",
-    "Perfect time to grab popcorn or pet your dog!",
-    "This scene is like a filler episode—skip guilt-free!",
-    "Even the movie fell asleep here!",
-    "Use this moment to question your life choices... or make tea.",
-    "Back in my day, we called this a bathroom intermission!"
-]
-
-sent_times = set()
-
-while not should_stop():
-    now = datetime.datetime.now().strftime("%H:%M:%S")
-    for entry in break_times:
-        if entry["time"] == now and entry["time"] not in sent_times:
-            joke = random.choice(JOKES)
-            notification.notify(
-                title="🤣 Joke Time!",
-                message=joke,
-                timeout=10
-            )
-            print(f"🔔 Joke sent at {now}: {joke}")
-            sent_times.add(entry["time"])
     time.sleep(1)
