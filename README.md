@@ -5,6 +5,9 @@ Find ideal movie break times using subtitle analysis and receive joke-based noti
 Team members
 Vishnu P Venmany(CUSAT)
 Yadhukrishna M(CUSAT)
+Team members
+Vishnu P Venmany(CUSAT)
+Yadhukrishna M(CUSAT)
 
 1. Run `app.py` to generate break schedule.
 2. Run `notifier.py` in the background.
